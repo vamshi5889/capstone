@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Home from './pages/Home';
-import UploadProject from './pages/UploadProject';
-import ViewProjects from './pages/ViewProjects';
-import ProjectDetails from './pages/ProjectDetails';
-import UserProfile from './pages/UserProfile'; 
-import Login from './pages/Login';
-import CreateUser from './pages/CreateUser';  
-import AllUsers from './pages/AllUsers'; 
-import AdminPage from './pages/AdminPage'; 
-import Header from './components/Header';
-import Footer from './components/Footer';
-import './index.css'; 
+import React, { useState, useEffect } from "react";
+import HeaderComponent from "./components/Header";
+import FooterComponent from "./components/Footer";
+import "./index.css";
+import Navigation from "./components/Navigation";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Layout, Radio } from "antd";
+const { Header, Content, Footer } = Layout;
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [mode, setMode] = useState(
+    location.pathname.includes("/user") ? "users" : "projects"
+  );
+
+  const handleModeChange = (e) => {
+    setMode(e.target.value);
+    navigate(`/${e.target.value}`);
+  };
 
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/auth_status', { credentials: 'include' });
+        const response = await fetch("/api/auth_status", {
+          credentials: "include",
+        });
         if (response.ok) {
           const data = await response.json();
           setIsAuthenticated(data.authenticated);
@@ -32,29 +38,38 @@ function App() {
   }, []);
 
   return (
-    <Router>
-      <Header isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />
-      <div className="App min-h-screen bg-gray-100">
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/view-projects" element={<ViewProjects />} />
-          <Route path="/project/:projectId" element={<ProjectDetails />} /> {/* Project Details Route */}
-          <Route path="/user/:userId" element={<UserProfile />} /> {/* User Profile Route */}
-          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/create-user" element={<CreateUser />} /> {/* Create User Route */}
-          <Route path="/all-users" element={<AllUsers />} /> {/* All Users Route */}
-          <Route path="/upload-project" element={<UploadProject />} />
-          <Route path="/admin" element={<AdminPage />} /> {/* Admin page route */}
-
-
-          {/* Redirect any unknown routes */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </div>
-      <Footer />
-    </Router>
+    <Layout>
+      <Header className="header-layout">
+        <HeaderComponent
+          isAuthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}
+        />
+      </Header>
+      <Layout>
+        <Content>
+          {isAuthenticated && (location.pathname.includes("/user") ||
+            location.pathname.includes("/project")) && (
+            <Radio.Group
+              className="dashboard-tabs"
+              onChange={handleModeChange}
+              value={mode}
+              style={{ padding: "2% 10%" }}
+            >
+              <Radio.Button value="users" className="dashboard-tabs">
+                Users
+              </Radio.Button>
+              <Radio.Button value="projects" className="dashboard-tabs">
+                Projects
+              </Radio.Button>
+            </Radio.Group>
+          )}
+          <Navigation />
+        </Content>
+      </Layout>
+      <Footer className="footer-layout">
+        <FooterComponent />
+      </Footer>
+    </Layout>
   );
 }
 
