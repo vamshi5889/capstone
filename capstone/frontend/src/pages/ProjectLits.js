@@ -9,7 +9,7 @@ import {
   Popconfirm,
   Modal,
   Spin,
-  Input
+  Input,
 } from "antd";
 import {
   DeleteOutlined,
@@ -44,9 +44,7 @@ function ProjectLits({ isAuthenticated }) {
   const searchKey = urlParams.get("search");
   const [searchQuery, setSearchQuery] = useState(searchKey || "");
 
-  const handleSearch = () => {
-    
-  };
+  const handleSearch = () => {};
 
   const confirm = async () => {
     setShowLoader(true);
@@ -422,32 +420,40 @@ function ProjectLits({ isAuthenticated }) {
     <div className="users-list-layout">
       <Spin spinning={showLoader} size="large" fullscreen />
       <Row>
-        <Col span={11}>
+        <Col span={localStorage.getItem("role") === "Admin" ? 11 : 16}>
           <Title level={2}>Projects</Title>
         </Col>
         <Col span={8} className="search-btn" style={{ textAlign: "right" }}>
-        <Search
-                placeholder="Search projects..."
-                allowClear
-                onSearch={handleSearch}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                enterButton
-                value={searchQuery}
-              />
-              </Col>
-        <Col span={5} style={{ textAlign: "right" }}>
-          <Button
-            type="primary"
-            icon={<UsergroupAddOutlined />}
-            iconPosition={"start"}
-            className="logout-btn"
-            onClick={showModal}
-          >
-            Upload Project
-          </Button>
+          <Search
+            placeholder="Search projects..."
+            allowClear
+            onSearch={handleSearch}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            enterButton
+            value={searchQuery}
+          />
         </Col>
+        {localStorage.getItem("role") === "Admin" && (
+          <Col span={5} style={{ textAlign: "right" }}>
+            <Button
+              type="primary"
+              icon={<UsergroupAddOutlined />}
+              iconPosition={"start"}
+              className="logout-btn"
+              onClick={showModal}
+            >
+              Upload Project
+            </Button>
+          </Col>
+        )}
       </Row>
-      <Table columns={columns} dataSource={projects?.filter((val) => val?.title?.toLowerCase().includes(searchQuery?.toLowerCase()))} rowSelection={null} />
+      <Table
+        columns={columns}
+        dataSource={projects?.filter((val) =>
+          val?.title?.toLowerCase().includes(searchQuery?.toLowerCase())
+        )}
+        rowSelection={null}
+      />
       <Modal
         open={openModal}
         title={

@@ -340,15 +340,17 @@ function AllUsers() {
           <Title level={2}>Users</Title>
         </Col>
         <Col span={12} style={{ textAlign: "right" }}>
-          <Button
-            type="primary"
-            icon={<UsergroupAddOutlined />}
-            iconPosition={"start"}
-            className="logout-btn"
-            onClick={showModal}
-          >
-            Create User
-          </Button>
+          {localStorage.getItem("role") === "Admin" && (
+            <Button
+              type="primary"
+              icon={<UsergroupAddOutlined />}
+              iconPosition={"start"}
+              className="logout-btn"
+              onClick={showModal}
+            >
+              Create User
+            </Button>
+          )}
         </Col>
       </Row>
       <Table columns={columns} dataSource={users} />

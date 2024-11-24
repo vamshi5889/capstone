@@ -13,8 +13,7 @@ import Login from "../pages/Login";
 import UserList from "../pages/UserList";
 import "../index.css";
 
-function Navigation() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+function Navigation({isAuthenticated, setIsAuthenticated}) {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
@@ -38,7 +37,10 @@ function Navigation() {
       <Routes>
         {/* Public Routes */}
         <Route path="/home" element={<Home />} />
-        <Route path="/projects" element={<ProjectLits isAuthenticated={isAuthenticated} />} />
+        <Route
+          path="/projects"
+          element={<ProjectLits isAuthenticated={isAuthenticated} />}
+        />
         <Route path="/project/:projectId" element={<ProjectDetails />} />{" "}
         {/* Project Details Route */}
         <Route path="/user/:userId" element={<UserProfile />} />{" "}
@@ -49,7 +51,6 @@ function Navigation() {
         />
         {/* Create User Route */}
         <Route path="/users" element={<UserList />} />
-        
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
     </div>

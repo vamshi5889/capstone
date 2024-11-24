@@ -10,10 +10,16 @@ const { Header, Content, Footer } = Layout;
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem("name") !== "" && localStorage.getItem("name") !== null
+  );
   const [mode, setMode] = useState(
     location.pathname.includes("/user") ? "users" : "projects"
   );
+
+  useEffect(() => {
+    setMode(location.pathname.includes("/user") ? "users" : "projects")
+  },[location])
 
   const handleModeChange = (e) => {
     setMode(e.target.value);
@@ -47,23 +53,27 @@ function App() {
       </Header>
       <Layout>
         <Content>
-          {isAuthenticated && (location.pathname.includes("/user") ||
-            location.pathname.includes("/project")) && (
-            <Radio.Group
-              className="dashboard-tabs"
-              onChange={handleModeChange}
-              value={mode}
-              style={{ padding: "2% 10%" }}
-            >
-              <Radio.Button value="users" className="dashboard-tabs">
-                Users
-              </Radio.Button>
-              <Radio.Button value="projects" className="dashboard-tabs">
-                Projects
-              </Radio.Button>
-            </Radio.Group>
-          )}
-          <Navigation />
+          {isAuthenticated &&
+            (location.pathname.includes("/user") ||
+              location.pathname.includes("/project")) && (
+              <Radio.Group
+                className="dashboard-tabs"
+                onChange={handleModeChange}
+                value={mode}
+                style={{ padding: "2% 10%" }}
+              >
+                {/* {localStorage.getItem("role") === "Admin" && ( */}
+                  <Radio.Button value="users" className="dashboard-tabs">
+                    Users
+                  </Radio.Button>
+                {/* )} */}
+                <Radio.Button value="projects" className="dashboard-tabs">
+                  Projects
+                </Radio.Button>
+              </Radio.Group>
+            )}
+          <Navigation isAuthenticated={isAuthenticated}
+          setIsAuthenticated={setIsAuthenticated}/>
         </Content>
       </Layout>
       <Footer className="footer-layout">

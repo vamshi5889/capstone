@@ -26,11 +26,15 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
       setIsAuthenticated(false);
       navigate("/login");
     }
+
+    setIsAuthenticated(false);
+    localStorage.clear();
+    navigate("/login");
   };
 
   return (
     <Row className="header-container">
-      <Col span={14}>
+      <Col span={12}>
         <Link to="/home">
           <img
             src={logo}
@@ -39,10 +43,10 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
           />
         </Link>
       </Col>
-      <Col span={10}>
+      <Col span={12}>
         <Row>
           <Col
-            span={6}
+            span={5}
             className={`nav-text-alignment ${
               location.pathname === "/home" ? "header-nav-active" : ""
             }`}
@@ -53,7 +57,7 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
             </Link>
           </Col>
           <Col
-            span={6}
+            span={5}
             className={`nav-text-alignment ${
               location.pathname === "/projects" ? "header-nav-active" : ""
             }`}
@@ -63,20 +67,42 @@ function Header({ isAuthenticated, setIsAuthenticated }) {
               Projects
             </Link>
           </Col>
-          <Col span={12} className="logout-btn-alignment">
+          <Col
+            span={14}
+            className="logout-btn-alignment"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: isAuthenticated ? "center" : "flex-end",
+            }}
+          >
             {isAuthenticated ? (
-              <Space align="center">
-                <Title level={4} style={{ marginBottom: "0px" }}>
-                  Hi! Sai Jyoshna
-                </Title>
-                <Button
-                  type="primary"
-                  icon={<LogoutOutlined />}
-                  onClick={handleLogout}
-                  iconPosition={"start"}
-                  className="logout-btn"
-                ></Button>
-              </Space>
+              <Row align="center">
+                <Col
+                  span={16}
+                  style={{
+                    display: "flex",
+                    justifyContent: "end",
+                    alignItems: "center",
+                  }}
+                >
+                  <Title level={4} style={{ marginBottom: "0px" }}>
+                    Hi! {localStorage.getItem("name")}
+                  </Title>
+                </Col>
+                <Col span={1}>{"       "}</Col>
+                <Col span={6} style={{ display: "flex", alignItems: "center" }}>
+                  <Button
+                    type="primary"
+                    icon={<LogoutOutlined />}
+                    onClick={() => handleLogout()}
+                    iconPosition={"start"}
+                    className="logout-btn"
+                  >
+                    Logout
+                  </Button>
+                </Col>
+              </Row>
             ) : (
               <Button
                 type="primary"
