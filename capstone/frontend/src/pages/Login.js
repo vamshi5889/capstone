@@ -92,7 +92,7 @@ function Login({ setIsAuthenticated }) {
           onClick={handleLogin}
           iconPosition={"end"}
           className="logout-btn mt-12"
-          style={{ width: "300px" }}
+          style={{ width: "300px", fontWeight: 700 }}
         >
           Login
         </Button>
