@@ -2,9 +2,14 @@ import React from "react";
 import { UploadOutlined } from "@ant-design/icons";
 import { Row, Col, Input, Select, Upload, Button } from "antd";
 import Title from "antd/es/typography/Title";
-import { Link } from "react-router-dom";
 
-function CreateProjectForm({ formData, setFormData, userList, mode }) {
+function CreateProjectForm({
+  formData,
+  setFormData,
+  userList,
+  mode,
+  departments,
+}) {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -42,11 +47,11 @@ function CreateProjectForm({ formData, setFormData, userList, mode }) {
             maxLength={200}
           />
         </Col>
-        <Col span={24} className="mb-4">
+        <Col span={12} className="mb-4">
           <label className="block mb-2">Created By:</label>
           <Select
             value={formData?.created_by}
-            style={{ width: "100%" }}
+            style={{ width: "98%" }}
             allowClear
             options={userList?.map(({ id, name, department }) => {
               return { value: id, label: name + " - " + department };
@@ -56,14 +61,18 @@ function CreateProjectForm({ formData, setFormData, userList, mode }) {
             placeholder="Select User"
           />
         </Col>
-        <Col span={24} className="mb-4">
+        <Col span={12} className="mb-4">
           <label className="block mb-2">Department:</label>
-          <Input
-            placeholder="Enter Title"
-            value={formData.department}
-            onChange={handleChange}
+          <Select
+            value={formData?.department}
+            style={{ width: "98%" }}
+            allowClear
+            options={departments?.map(({ id, name }) => {
+              return { value: id, label: name };
+            })}
             name="department"
-            maxLength={200}
+            onChange={(e) => setFormData({ ...formData, department: e })}
+            placeholder="Select Department"
           />
         </Col>
         <Col span={24} className="mb-4">
